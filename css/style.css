@@ -193,11 +193,17 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--bg-light);
-    background: var(--gray-dark);
+    color: var(--dark);
+    background: var(--bg-light);
     border-radius: 5px;
     padding: 1rem;
 }
+
+.transactions .transaction small {
+    font-weight: 600;
+    color: var(--dark);
+}
+
 
 .transactions .transaction p:nth-child(1) {
     flex: 1;
@@ -210,6 +216,14 @@ body {
     font-weight: 600;
     /* color: var(--light); */
     margin-right: 2rem;
+}
+
+.transactions .transaction.credit p:nth-child(2) {
+    color: var(--yellow);
+}
+
+.transactions .transaction.debit p:nth-child(2) {
+    color: var(--red);
 }
 
 .transactions .transaction .icons {
