@@ -2,17 +2,13 @@ const information = {
     income: 0,
     expense: 0,
     total_balance: 0,
-    transactions: [
-        {
-            tid: 1,
-            title: "Example",
-            amount: 10,
-            type: "credit"
-        }
-    ]
+    transactions: [],
 }
 
 const form = document.querySelector("#transaction-form");
+
+let isUpdate = false;
+let tranId;
 
 // Function definitions
 
@@ -39,8 +35,8 @@ function displayData() {
                                     <p>${title}</p>
                                     <p><small>${isCredit ? "Cr" : "Dr"} </small>${isCredit ? "+" : "-"} ₹${amount}</p>
                                     <div class="icons">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        <i class="fa-solid fa-trash"></i>
+                                        <i class="fa-solid fa-pen-to-square" onclick="updateBtn(${tId})"></i>
+                                        <i class="fa-solid fa-trash" onclick="deleteBtn(${tId})"></i>
                                     </div>
                                 </div>`;
 
@@ -68,19 +64,49 @@ const submitForm = (e) => {
 
     const { title, amount } = dataObj;
     const transaction = {
-        tId: Math.floor(Math.random() * 1000),
+        tId: isUpdate ? tranId : Math.floor(Math.random() * 1000),
         title: title,
         amount: +amount, // "+" is used to convert  string into number
         type: isIncome ? "credit" : "debit"
     }
 
-    information.transactions.push(transaction);
+    if (isUpdate) {
+        const tranIndex = information.transactions.findIndex((t) => t.tId === tranId);
+        information.transactions[tranIndex] = transaction;
+        isUpdate = false;
+        tranId = null;
+        console.log(transaction);
+    } else {
+        information.transactions.push(transaction);
+    }
     displayData();
-    console.log(information);
+    form.reset();
+}
+
+
+function updateBtn(id) {
+    const transaction = information.transactions.find((t) => t.tId === id);
+    const { title, amount } = transaction;
+
+    let titleInput = document.getElementById("title");
+    let amountInput = document.getElementById("amount");
+
+    titleInput.value = title;
+    amountInput.value = amount;
+
+    isUpdate = true;
+    tranId = id;
+    // console.log({ title, amount });
+    // console.log(id)
+}
+
+function deleteBtn(id) {
+    let filterTran = information.transactions.filter((t) => t.tId !== id)
+    information.transactions = filterTran;
+    displayData();
 }
 
 displayData();
 form.addEventListener("submit", submitForm);
-
 
 // console.log(isIncome);
